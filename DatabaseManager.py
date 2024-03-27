@@ -7,6 +7,10 @@ from functools import wraps
 from Tables import Contact
 from Tables import Base
 from SessionManager import session_management
+import re
+
+EMAIL_REGEX = "^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$"
+PHONE_REGEX = "^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$"
 
 
 class DatabaseManager:
@@ -70,6 +74,15 @@ class DatabaseManager:
         Returns:
             Contact: The created contact object.
         """
+
+        if (not re.match(EMAIL_REGEX, email)):
+            raise ValueError("email doesn't match the EMAIL_REGEX")
+        
+        if (not re.match(PHONE_REGEX, phone)):
+            raise ValueError("phone doesn't match the PHONE_REGEX")
+        
+
+
         contact = Contact(name=name, surname=surname, phone=phone, email=email)
         session.add(contact)
         return contact
