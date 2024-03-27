@@ -52,7 +52,10 @@ async def create_contact(o: ContactCreateRequest):
     Returns:
         dict: The contact information.
     """
-    return db.create_contact(o.name, o.surname, o.phone, o.email)
+    try:
+        return db.create_contact(o.name, o.surname, o.phone, o.email)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.put("/contacts/{contact_id}")
 async def update_contact(contact_id: int, name: str, surname: str, phone: str, email: str):
