@@ -6,6 +6,7 @@ from sqlalchemy.exc import InvalidRequestError
 from functools import wraps
 from Tables import Contact
 from Tables import Base
+from SessionManager import session_management
 
 
 class DatabaseManager:
@@ -27,7 +28,7 @@ class DatabaseManager:
     
     
     
-    @session_management
+    @session_management()
     def get_contacts(self, session=None):
         """
         Retrieve all contacts from the database.
@@ -40,7 +41,7 @@ class DatabaseManager:
         """
         return session.query(Contact).all()
     
-    @session_management
+    @session_management()
     def get_contact(self, id, session=None):
         """
         Retrieve a contact from the database by its ID.
@@ -54,7 +55,7 @@ class DatabaseManager:
         """
         return session.query(Contact).filter(Contact.id == id).first()
     
-    @session_management
+    @session_management(auto_commit=True)
     def create_contact(self, name, surname, phone, email, session=None):
         """
         Create a new contact and add it to the database.
@@ -73,7 +74,7 @@ class DatabaseManager:
         session.add(contact)
         return contact
     
-    @session_management
+    @session_management(auto_commit=True)
     def update_contact(self, contact, session=None):
         """
         Update a contact in the database.
@@ -88,7 +89,7 @@ class DatabaseManager:
         session.add(contact)
         return contact
     
-    @session_management
+    @session_management(auto_commit=True)
     def delete_contact(self, contact, session=None):
         """
         Deletes a contact from the database.
